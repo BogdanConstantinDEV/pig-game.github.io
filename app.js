@@ -13,9 +13,9 @@ document.querySelector('.btn-roll').addEventListener('click', () => {
         diceImg.src = `dice-${dice}.png`
 
         // set round score
+        if (dice === 1) return nextPlayer()
         roundScore += dice
         document.getElementById(`current-${activePlayer}`).textContent = roundScore
-        if (dice === 1) nextPlayer()
     }
 })
 
