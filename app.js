@@ -1,20 +1,23 @@
-let activePlayer, scores, roundScore, gameON
+let activePlayer, scores, roundScore, gameON, finalScore
 newGame()
 
 
 // button-event => roll dice
 document.querySelector('.btn-roll').addEventListener('click', () => {
     if (gameON) {
-        const dice = Math.floor(Math.random() * 6) + 1
+        const dice_1 = Math.floor(Math.random() * 6) + 1
+        const dice_2 = Math.floor(Math.random() * 6) + 1
 
         // set dice img
-        const diceImg = document.querySelector('.dice')
-        diceImg.style.display = 'block'
-        diceImg.src = `dice-${dice}.png`
+        toggleDice('block')
+        document.getElementById('dice-1').src = `dice-${dice_1}.png`
+        document.getElementById('dice-2').src = `dice-${dice_2}.png`
 
+
+
+        if (dice_1 === 1 || dice_2 === 1) return nextPlayer()
         // set round score
-        if (dice === 1) return nextPlayer()
-        roundScore += dice
+        roundScore += dice_1 + dice_2
         document.getElementById(`current-${activePlayer}`).textContent = roundScore
     }
 })
@@ -30,11 +33,19 @@ document.querySelector('.btn-hold').addEventListener('click', () => {
         document.getElementById(`score-${activePlayer}`).textContent = scores[activePlayer]
 
         // check if current player won
-        if (scores[activePlayer] >= 100) {
-            return gameWon()
+        let scoreInput = document.querySelector('.final-score').value
+        if (scoreInput) {
+            finalScore = scoreInput
+        } else {
+            finalScore = 100
         }
 
-        nextPlayer()
+        if (scores[activePlayer] >= finalScore) {
+            gameWon()
+        } else {
+            nextPlayer()
+        }
+
     }
 })
 
@@ -69,8 +80,13 @@ function newGame() {
     document.querySelector('.player-0-panel').classList.add('active')
     document.querySelector('.player-1-panel').classList.remove('active')
 
-    document.querySelector('.dice').style.display = 'none'
+    toggleDice('none')
     gameON = true
+}
+function toggleDice(visibility) {
+    document.querySelectorAll('.dice').forEach((dice, i) => {
+        dice.style.display = visibility === 'block' ? 'block' : 'none'
+    })
 }
 
 
@@ -84,7 +100,7 @@ function nextPlayer() {
     document.querySelector('.player-0-panel').classList.toggle('active')
     document.querySelector('.player-1-panel').classList.toggle('active')
 
-    document.querySelector('.dice').style.display = 'none'
+    toggleDice('none')
 }
 
 
